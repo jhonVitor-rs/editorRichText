@@ -5,6 +5,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+        <!-- Fonts
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans+Inline+One&family=Mouse+Memoirs&family=Oleo+Script+Swash+Caps&family=Poppins&family=Roboto&display=swap" rel="stylesheet"> -->
+
         <link rel="stylesheet" href="style.css">
 
         <script src="https://kit.fontawesome.com/7094b4a4e0.js" crossorigin="anonymous"></script>
@@ -16,7 +21,34 @@
             <div class="container">
                 <h1 class="tittle">Editor - RichText</h1>
                 <nav class="menu">
-                    
+                    <div class="fontType">
+                        <select name="fonts" id="fonts"></select>
+                        <select name="sizes" id="sizes"></select>
+                    </div>
+                    <div class="fontStyles">
+                        <button class="button" id="bold" onclick="fontStyles('bold')"><i class="fa fa-bold"></i></button>
+                        <button class="button" id="italic" onclick="fontStyles('italic')"><i class="fa fa-italic"></i></button>
+                        <button class="button" id="underline" onclick="fontStyles('underline')"><i class="fa fa-underline"></i></button>
+                        <button class="button" id="strikethrough" onclick="fontStyles('strikethrough')"><i class="fa fa-strikethrough"></i></button>
+                    </div>
+                    <div class="colors">
+                        <label>Cor da Fonte:<select name="fontColor" id="fontColor"></select></label>
+                        <label>Cor de Fundo:<select name="backColor" id="backColor"></select></label>
+                    </div>
+                    <div class="textAlign">
+                        <button class="button" id="justifyLeft" onclick="textFormat('justifyleft')"><i class="fa fa-align-left"></i></button>
+                        <button class="button" id="justifyCenter" onclick="textFormat('justifycenter')"><i class="fa fa-align-center"></i></button>
+                        <button class="button" id="justifyRight" onclick="textFormat('justifyright')"><i class="fa fa-align-right"></i></button>
+                        <button class="button" id="justifyFull" onclick="textFormat('justifyfull')"><i class="fa fa-align-justify"></i></button>
+                    </div>
+                    <div class="insertLink">
+                        <button class="button" id="createLink"><i class="fa fa-link"></i></button>
+                        <button class="button" id="unLink" onclick="textFormat('unlink')"><i class="fa fa-unlink"></i></button>
+                    </div>
+                    <div class="lists">
+                        <button class="button" id="orderedLis" onclick="textFormat('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
+                        <button class="button" id="unorderedList" onclick="textFormat('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
+                    </div>
                 </nav>
                 <iframe 
                     name="RichTextIframe" 
@@ -26,9 +58,9 @@
                 >
                 </iframe>
             </div>
-            <div class="actions">
+            <!-- <div class="actions">
                 <button class="button">Salvar</button>
-            </div>
+            </div> -->
         </main>
 
         <script src="./script.js"></script>
