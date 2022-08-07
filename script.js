@@ -2,154 +2,90 @@ RichTextIframe.document.designMode = 'on'
 RichTextIframe.document.body.style.margin = 0
 RichTextIframe.document.body.style.wordWrap = 'break-word'
 
-var menu = document.querySelector('.menu')
-
-var buttonsToolbar = []
-var selectsToolbar = []
-
 var fonts = ['Arial', 'Calibri', 'Comic Sans MS', 'Impact', 'Trebuchet MS', 'Times New Roman']
 var sizes = [1, 2, 3, 4, 5, 6, 7]
 var colors = ['#000000', '#333333', '#666666', '#999999', '#CCCCCC', '#FFFFFF', '#0000FF', '#00FF00', '#FF0000', '#00FFFF', '#FFFF00', '#FF00FF']
 
-const selects = [
-    {
-        command: 'fontname',
-        value: fonts
-    },
-    {
-        command: 'fontsize',
-        value: sizes
-    },
-    {
-        command: 'forecolor',
-        value: colors
-    }
-]
 
-const buttons = [
-    {
-        command: 'bold',
-        icon: 'bold',
-    },
-    {
-        command: 'italic',
-        icon: 'italic'
-    },
-    {
-        command: 'underline',
-        icon: 'underline'
-    },
-    {
-        command: 'strikethrough',
-        icon: 'strikethrough'
-    },
-    {
-        command: 'justifyleft',
-        icon: 'align-left'
-    },
-    {
-        command: 'justifycenter',
-        icon: 'align-center'
-    },
-    {
-        command: 'justifyright',
-        icon: 'align-right'
-    },
-    {
-        command: 'justifyfull',
-        icon: 'align-justify'
-    },
-    {
-        command: 'unlink',
-        icon: 'unlink'
-    },
-    {
-        command: 'insertOrderedList',
-        icon: 'list-ol'
-    },
-    {
-        command: 'insertUnorderedList',
-        icon: 'list-ul'
-    },
-    {
-        command: 'backColor',
-        icon: 'highlighter'
-    },
-    {
-        command: 'createLink',
-        icon: 'link'
-    }
-]
+// Estilo da Fonte
+const fontTypes = document.getElementById('fonts')
+fonts.forEach(element => {
+    let option = document.createElement('option')
+    option.appendChild(document.createTextNode(element))
+    fontTypes.appendChild(option)
+})
 
-function Component(command, element, event){
-    this.command = command
-    this.element = document.createElement('span')
-    this.element.appendChild(element)
-    this.recoverValue = () => {
-        return null
-    }
+fontTypes.addEventListener('change', () => {
+    RichTextIframe.document.execCommand('fontname', false, fontTypes.value)
+})
 
-    var selfComponent = this
-    this.element.addEventListener(event, () => {
-        RichTextIframe.document.execCommand(command, false, selfComponent.recoverValue())
-    })
+//Tamanho da fonte
+const fontSizes = document.getElementById('sizes')
+sizes.forEach(element => {
+    let option = document.createElement('option')
+    option.appendChild(document.createTextNode(element))
+    fontSizes.appendChild(option)
+})
+
+fontSizes.addEventListener('change', () => {
+    RichTextIframe.document.execCommand('fontsize', false, fontSizes.value)
+})
+
+//fontStyles
+const bold = document.getElementById('bold')
+const italic = document.getElementById('italic')
+const underline = document.getElementById('underline')
+const strikethrough = document.getElementById('strikethrough')
+
+function fontStyles(command){
+    RichTextIframe.document.execCommand(command, false, null)
 }
 
-function ComponentSelect(command, values){
-    var select = document.createElement('select')
-    values.forEach(value => {
-        var option = document.createElement('option')
-        option.appendChild(document.createTextNode(value))
-        select.appendChild(option)
-    })
+//fontColors
+const fontColors = document.getElementById('fontColor')
+colors.forEach(element => {
+    let option = document.createElement('option')
+    option.appendChild(document.createTextNode(element))
+    option.style.backgroundColor = element
+    option.style.color = element
+    fontColors.appendChild(option)
+})
 
-    Component.call(this, command, select, 'change')
+fontColors.addEventListener('change', () => {
+    fontColors.style.backgroundColor = fontColors.value
+    fontColors.style.color = fontColors.value
+    RichTextIframe.document.execCommand('foreColor', false, fontColors.value)
+})
 
-    var selfComponentSelect = this
-    this.recoverValue = () => {
-        return selfComponentSelect.element.firstChild.value
-    }
+//cor de fundo
+const backColors = document.getElementById('backColor')
+colors.forEach(element => {
+    let option = document.createElement('option')
+    option.appendChild(document.createTextNode(element))
+    option.style.backgroundColor = element
+    option.style.color = element
+    backColors.appendChild(option)
+})
+
+backColors.addEventListener('change', () => {
+    backColors.style.backgroundColor = backColors.value
+    backColors.style.color = backColors.value
+    RichTextIframe.document.execCommand('backColor', false, backColors.value)
+})
+
+//Alinhamento
+const alignLeft = document.getElementById('justifyLeft')
+const alignCenter = document.getElementById('justifyCenter')
+const alignRight = document.getElementById('justifyRight')
+const alignJustify = document.getElementById('justifyFull')
+
+//links
+const insertLink = document.getElementById('createLink')
+insertLink.addEventListener('click', () => {
+    RichTextIframe.document.execCommand('createLink', false, prompt('Entre com o emdereço do link:'))
+})
+
+//funçao botoes
+function textFormat(command){
+    RichTextIframe.document.execCommand(command, false, null)
 }
-
-function ComponentButton(command, icon){
-    var button = document.createElement('button')
-    var buttonIcon = document.createElement('i')
-    buttonIcon.classList.add('fa', 'fa-'+icon)
-    button.appendChild(buttonIcon)
-    Component.call(this, command, button, 'click')
-}
-
-function initToolbar(){
-    buttons.forEach(element => {
-        let button = new ComponentButton(element.command, element.icon)
-        buttonsToolbar.push(button)
-    })
-    
-    selects.forEach(element => {
-        let select = new ComponentSelect(element.command, element.value)
-        selectsToolbar.push(select)
-    })
-    Array.from(selectsToolbar[2].element.firstChild.options).forEach(option => {
-        option.style.color = option.value
-    })
-
-    renderToolbar()
-}
-
-function renderToolbar(){
-    var listSelect = document.createElement('div')
-    var listButton = document.createElement('div')
-
-    selectsToolbar.forEach(component => {
-        listSelect.appendChild(component.element)
-    })
-
-    buttonsToolbar.forEach(component => {
-        listButton.appendChild(component.element)
-    })
-
-    menu.appendChild(listSelect)
-    menu.appendChild(listButton)
-}
-
-initToolbar()
